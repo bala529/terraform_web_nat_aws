@@ -1,0 +1,51 @@
+{
+    "variables": {
+        "aws_access_key_id": "<<ACCESS-KEY>>",
+        "aws_secret_access_key": "<<SECRET-KEY>>",
+        "ssl_certs_dir": ""
+    },
+	    "builders": [
+        {
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key_id`}}",
+            "secret_key": "{{user `aws_secret_access_key`}}",
+            "region": "eu-west-1",
+            "source_ami": "ami-70edb016",
+            "instance_type": "t2.micro",
+            "ssh_username": "ec2-user",
+            "ssh_pty": "true",
+            "ami_name": "Web_server-{{timestamp}}",
+            "tags": {
+                "project": "Web-server",
+                "application": "definiens",
+                "Name": "web_nat-{{timestamp}}",
+                "description": "build with packer",
+                "owner": "balu.ls@live.com",
+                "packer": "build on {{timestamp}}",
+                "creation-date": "{{timestamp}}"
+            },
+            "run_tags": {
+                "application": "packer"
+            }
+        }
+    ],
+    "provisioners": [
+
+      {
+           "type": "file",
+           "source": "scripts/nginx.conf",
+           "destination": "/tmp/nginx.conf"
+      },
+      {
+            "type": "shell",
+            "execute_command": "echo '{{user `ssh_pass`}}' | {{ .Vars }} sudo -S -E sh '{{ .Path }}'",
+            "override": {
+                "amazon-ebs": {
+                    "scripts": [
+                        "scripts/base.sh"
+                    ]
+                }
+            }
+        }
+    ]
+}
