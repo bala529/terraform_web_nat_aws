@@ -27,7 +27,7 @@ Terraform script will spin up the following:
 
 ## Instructions:
 
-Required packer and terraform to be installed as pre-requisites.
+Requirements: [Packer](https://www.packer.io/downloads.html) and [Terraform](https://www.packer.io/downloads.html) {"brew install packer" & "brew install terraform" for mac os X} 
 
 1) Build the packer image. It is build form the base AMI ami-70edb016 (amazon linux-centos 6.5).
 
